@@ -1,0 +1,54 @@
+﻿@model electronics_wizard.ViewModel.ElectronicDetailsViewModel
+
+@{
+    ViewData["Title"] = "Electronic Details";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-2">
+            <img src="@Model.Electronics.Image" class="img-fluid" alt="@Model.Electronics.ElectronicName">
+        </div>
+        <div class="col-md-6">
+            <h1>@Model.Electronics.ElectronicName</h1>
+            <p>@Model.Electronics.Description</p>
+            <p><strong>Price: </strong>@Model.Electronics.Price.ToString("C")</p>
+            @if (Model.Electronics.Stock == 0)
+            {
+                <p class="text-danger"><strong>Stock: </strong>Stock Out</p>
+            }
+            else
+            {
+                <p><strong>Stock: </strong>@Model.Electronics.Stock</p>
+                <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                    <input type="hidden" name="productId" value="@Model.Electronics.ElectronicId" />
+                    <div class="form-group col-md-2">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" name="quantity" class="form-control" value="1" min="1" />
+                    </div>
+                    <button type="submit" class="btn text-white mt-2" style="background-color: purple;">Add to Cart</button>
+                </form>
+            }
+        </div>
+    </div>
+    <hr>
+    <h3>Other Products</h3>
+    <div class="row">
+        @foreach (var product in Model.OtherElectronics)
+        {
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <img src="@product.Image" class="card-img-top" alt="@product.ElectronicName">
+                    <div class="card-body">
+                        <h5 class="card-title">@product.ElectronicName</h5>
+                        <p class="card-text">
+                            @product.Description
+                        </p>
+                        <p class="card-text"><strong>@product.Price.ToString("C")</strong></p>
+                        <a href="@Url.Action("ElectronicDetails", "Home", new { id = product.ElectronicId })" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
